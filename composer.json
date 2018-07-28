@@ -1,8 +1,10 @@
 {
     "name": "amphp/cache",
     "homepage": "https://github.com/amphp/cache",
-    "description": "A promise-aware caching API for Amp.",
+    "description": "Caching that doesn't block.",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "support": {
         "issues": "https://github.com/amphp/cache/issues",
         "irc": "irc://irc.freenode.org/amphp"
@@ -18,12 +20,13 @@
         }
     ],
     "require": {
-        "amphp/amp": "^2"
+        "php": ">=7.2",
+        "amphp/amp": "dev-ext-async"
     },
     "require-dev": {
+        "amphp/php-cs-fixer-config": "dev-master",
         "amphp/phpunit-util": "^1",
-        "phpunit/phpunit": "^6",
-        "friendsofphp/php-cs-fixer": "^2.3"
+        "phpunit/phpunit": "^6"
     },
     "autoload": {
         "psr-4": {
@@ -37,7 +40,15 @@
     },
     "config": {
         "platform": {
-            "php": "7.0"
+            "php": "7.2.0"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs",
+            "@test"
+        ],
+        "cs": "php-cs-fixer fix -v --diff --dry-run",
+        "cs-fix": "php-cs-fixer fix -v --diff"
     }
 }
