@@ -21,8 +21,7 @@ final class ArrayCache implements Cache
         // By using a shared state object we're able to use `__destruct()` for "normal" garbage collection of both this
         // instance and the loop's watcher. Otherwise this object could only be GC'd when the TTL watcher was cancelled
         // at the loop layer.
-        $this->sharedState = $sharedState = new class
-        {
+        $this->sharedState = $sharedState = new class {
             use Struct;
 
             public $cache = [];
