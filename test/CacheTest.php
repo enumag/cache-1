@@ -3,9 +3,9 @@
 namespace Amp\Cache\Test;
 
 use Amp\Cache\Cache;
-use PHPUnit\Framework\TestCase;
+use Concurrent\AsyncTestCase;
 
-abstract class CacheTest extends TestCase
+abstract class CacheTest extends AsyncTestCase
 {
     abstract protected function createCache(): Cache;
 

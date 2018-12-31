@@ -20,13 +20,12 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "amphp/amp": "dev-ext-async"
     },
     "require-dev": {
-        "amphp/php-cs-fixer-config": "dev-master",
-        "amphp/phpunit-util": "^1",
-        "phpunit/phpunit": "^6"
+        "amphp/php-cs-fixer-config": "dev-ext-async",
+        "phpunit/phpunit": "^7.5.1"
     },
     "autoload": {
         "psr-4": {
@@ -40,15 +39,15 @@
     },
     "config": {
         "platform": {
-            "php": "7.2.0"
+            "php": "7.3.0"
         }
     },
     "scripts": {
         "check": [
-            "@cs",
+            "@code-style",
             "@test"
         ],
-        "cs": "php-cs-fixer fix -v --diff --dry-run",
-        "cs-fix": "php-cs-fixer fix -v --diff"
+        "code-style": "php-cs-fixer fix -v --diff --dry-run",
+        "fix-code-style": "php-cs-fixer fix -v --diff"
     }
 }

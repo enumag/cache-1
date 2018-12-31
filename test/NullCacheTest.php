@@ -3,9 +3,9 @@
 namespace Amp\Cache\Test;
 
 use Amp\Cache\NullCache;
-use Amp\PHPUnit\TestCase;
+use Concurrent\AsyncTestCase;
 
-class NullCacheTest extends TestCase
+class NullCacheTest extends AsyncTestCase
 {
     public function test(): void
     {

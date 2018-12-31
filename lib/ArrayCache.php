@@ -2,13 +2,14 @@
 
 namespace Amp\Cache;
 
-use Amp\Loop;
 use Amp\Struct;
+use Concurrent\Task;
+use Concurrent\Timer;
 
 final class ArrayCache implements Cache
 {
     private $sharedState;
-    private $ttlWatcherId;
+    private $ttlTimer;
     private $maxSize;
 
     /**
@@ -20,7 +21,8 @@ final class ArrayCache implements Cache
         // By using a shared state object we're able to use `__destruct()` for "normal" garbage collection of both this
         // instance and the loop's watcher. Otherwise this object could only be GC'd when the TTL watcher was cancelled
         // at the loop layer.
-        $this->sharedState = $sharedState = new class {
+        $this->sharedState = $sharedState = new class
+        {
             use Struct;
 
             public $cache = [];
@@ -49,10 +51,16 @@ final class ArrayCache implements Cache
             }
         };
 
-        $this->ttlWatcherId = Loop::repeat($gcInterval, [$sharedState, "collectGarbage"]);
-        $this->maxSize = $maxSize;
+        $this->ttlTimer = $ttlTimer = new Timer($gcInterval);
 
-        Loop::unreference($this->ttlWatcherId);
+        Task::async(static function () use ($ttlTimer, $sharedState) {
+            while (true) {
+                $ttlTimer->awaitTimeout();
+                $sharedState->collectGarbage();
+            }
+        });
+
+        $this->maxSize = $maxSize;
     }
 
     public function __destruct()
@@ -60,7 +68,7 @@ final class ArrayCache implements Cache
         $this->sharedState->cache = [];
         $this->sharedState->cacheTimeouts = [];
 
-        Loop::cancel($this->ttlWatcherId);
+        $this->ttlTimer->close();
     }
 
     /** @inheritdoc */
